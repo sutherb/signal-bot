@@ -54,25 +54,25 @@ def chartCoin(requestedCoin):
         
         interval = 'm'
 
-        pInterval = '&days=7&interval=hourly'
-
+        pInterval = '&days=7
+        #1/7/14/30/90/180/365/max
         if interval == 'y':
-            pInterval = '&days=30&interval=weekly'
+            pInterval = '&days=365'
             resample = '2h'
         if interval == 'q':
-            pInterval = '&days=90&interval=daily'
+            pInterval = '&days=90'
             resample = '2h'
         if interval == 'm':
-            pInterval = '&days=30&interval=daily'
-            resample = '2h'
+            pInterval = '&days=30'
+            resample = '24h'
         if interval == 'w':
-            pInterval = '&days=7&interval=hourly'
+            pInterval = '&days=7'
             resample = '2h'
         if interval == 'd':
-            pInterval = '&days=1&interval=hourly'
+            pInterval = '&days=1'
             resample = '2h'
 
-
+        #interval doesn't work on api  &interval=daily
         r = requests.get('https://api.coingecko.com/api/v3/coins/'+coinId+'/market_chart?vs_currency=usd'+pInterval)
         d = r.json()
 
