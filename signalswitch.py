@@ -9,7 +9,7 @@ from gi.repository import GLib
 from pricebot import findCoin, findRatio
 from capbot import marketCap
 from chartbot import chartCoin
-from filebot import getFile
+#from filebot import getFile
 
 
 bus = SessionBus()
@@ -50,15 +50,22 @@ def msgRcv (timestamp, source, groupID, message, attachments):
 
 
         if messageSwitch[0] == "/c":
-            args = messageSwitch[1].lower()
-            coinSymbol = messageSwitch[1].lower()
+            #args = messageSwitch[1].lower()
+            #coinSymbol = messageSwitch[1].lower()
+            #chartCoin(args)
 
-            chartCoin(args)
+            coinSymbol = messageSwitch[1].lower()
+            range = ''
+            if (len(messageSwitch) > 2):
+                range = messageSwitch[2].lower()
+
+            chartCoin(coinSymbol, range)            
 
 
     attachment = []
-    if returnMessage == "getchart":
-        attachment = getFile(returnMessage)
+    if returnMessage == "gotchart":
+        with open("chart.png", "r") as openfile:
+            attachment[0] = openfile
 
 
     if groupID:

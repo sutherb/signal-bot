@@ -13,8 +13,23 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 
 
-response = requests.get("https://api.coingecko.com/api/v3/coins/list", timeout=10)
-coinListData = json.loads(response.text)
+
+with open("coinListData.json", "r") as openfile:
+    coinListDataDump = json.load(openfile)
+
+coinListData = json.loads(coinListDataDump)
+
+
+def coinListDataRefresh():
+    response = requests.get("https://api.coingecko.com/api/v3/coins/list", timeout=10)
+    coinListData = json.loads(response.text)
+    coinListDataDump = json.dumps(response.text)
+
+
+    with open("coinListData.json", "w") as outfile:
+        outfile.write(coinListDataDump)
+
+    return
 
 
 def formatPrice(price):
@@ -147,11 +162,13 @@ def findCoin(requestedCoin):
 
     coinId = ""
 
-
     if requestedCoin == "flash":
         coinId = "flash-stake"
     if requestedCoin == "fli":
         coinId = "eth-2x-flexible-leverage-index"
+    if requestedCoin == "eth":
+        coinId = "ethereum"
+    
     else:
         for coinItemData in coinListData:
             if coinItemData["symbol"] == requestedCoin:

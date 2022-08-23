@@ -6,9 +6,10 @@ import base64
 from pydbus import SessionBus
 from gi.repository import GLib
 
-from pricebot import findCoin, findRatio
+from pricebot import findCoin, findRatio, coinListDataRefresh
 from capbot import marketCap
 from chartbot import chartCoin
+from help import helpScreen
 
 
 
@@ -23,16 +24,21 @@ def msgRcv (message):
         
         print(messageSwitch[0])
 
+        if messageSwitch[0] == "/refresh":
+            coinListDataRefresh()
+
         if messageSwitch[0] == "/cap":
             marketCap()
 
         if messageSwitch[0] == "/ethbtc":
             findRatio()
 
-    
+        if messageSwitch[0] == "/?":
+            helpScreen()
 
     if messageLength >= 2:
         args = messageSwitch[1].lower()
+
         if messageSwitch[0] == "/p":
                 
             print (messageSwitch[1])
@@ -44,10 +50,14 @@ def msgRcv (message):
 
 
         if messageSwitch[0] == "/c":
-            args = messageSwitch[1].lower()
+            
             coinSymbol = messageSwitch[1].lower()
+            range = ''
+            if (len(messageSwitch) > 2):
+                range = messageSwitch[2].lower()
 
-            chartCoin(args)
+            print (range)
+            chartCoin(coinSymbol, range)
             
 
 

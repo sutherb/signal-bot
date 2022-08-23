@@ -6,7 +6,7 @@ import requests
 
 #plt.rcParams['axes.facecolor'] = 'darkblue'
 
-#import pandas as pd
+
 #import numpy as np
 #from datetime import datetime
 
@@ -16,12 +16,17 @@ import pandas as pd
 import mplfinance as mpf
 
 
-response = requests.get("https://api.coingecko.com/api/v3/coins/list", timeout=10)
-coinListData = json.loads(response.text)
+#response = requests.get("https://api.coingecko.com/api/v3/coins/list", timeout=10)
+#coinListData = json.loads(response.text)
 
 
+with open("coinListData.json", "r") as openfile:
+    coinListDataDump = json.load(openfile)
 
-def chartCoin(requestedCoin):
+coinListData = json.loads(coinListDataDump)
+
+
+def chartCoin(requestedCoin, range):
     
     #tempMessage = "Charts coming soon!"
     #print (tempMessage)
@@ -29,13 +34,16 @@ def chartCoin(requestedCoin):
     
     coinId = ""
 
-
+    print('request')
     print(requestedCoin)
 
     if requestedCoin == "flash":
         coinId = "flash-stake"
     if requestedCoin == "fli":
         coinId = "eth-2x-flexible-leverage-index"
+    if requestedCoin == "eth":
+        coinId = "ethereum"
+
     else:
         for coinItemData in coinListData:
             if coinItemData["symbol"] == requestedCoin:
@@ -53,30 +61,47 @@ def chartCoin(requestedCoin):
     try:
         
         interval = 'm'
+        if (range):
+            interval = range
 
-        pInterval = '&days=7
+        'default is 30 days, 2 hr sample'
+        pInterval = '&days=30'
+        resample = '2h'
         #1/7/14/30/90/180/365/max
-        if interval == 'y':
+
+        #y hy q m 2w w d max
+        if (interval == 'y' or interval == 'year'):
             pInterval = '&days=365'
-            resample = '2h'
-        if interval == 'q':
+            resample = '1w'
+        if (interval == 'h' or interval == 'halfyear'):
+            pInterval = '&days=180'
+            resample = '4d'
+        if interval == 'q' or interval == 'quarter':
             pInterval = '&days=90'
-            resample = '2h'
-        if interval == 'm':
+            resample = '1d'
+        if interval == 'm' or interval == 'month':
             pInterval = '&days=30'
-            resample = '24h'
-        if interval == 'w':
+            resample = '8h'
+        if interval == '2w' or interval == '2week':
+            pInterval = '&days=14'
+            resample = '4h'
+        if interval == 'w' or interval == 'week':
             pInterval = '&days=7'
-            resample = '2h'
-        if interval == 'd':
+            resample = '4h'
+        if interval == 'd' or interval == 'day':
             pInterval = '&days=1'
-            resample = '2h'
+            resample = '30min'
+        if (interval == 'x' or interval == 'max'):
+            pInterval = '&days=max'
+            resample = '1m'
 
         #interval doesn't work on api  &interval=daily
-        r = requests.get('https://api.coingecko.com/api/v3/coins/'+coinId+'/market_chart?vs_currency=usd'+pInterval)
+        requestString = 'https://api.coingecko.com/api/v3/coins/'+coinId+'/market_chart?vs_currency=usd'+pInterval
+        r = requests.get(requestString)
+        print(requestString)
         d = r.json()
 
-        #print(d)
+        #print(d) #shows resulting data from coingecko
 
         df = pd.DataFrame(d['prices'], columns = ['dateTime', 'price'])
         df['date'] = pd.to_datetime(df['dateTime'], unit='ms')
@@ -84,8 +109,14 @@ def chartCoin(requestedCoin):
         #ohlcdf = df.set_index('date')['price'].resample('4h').ohlc()
 
         ohlcdf = df.set_index('date')['price'].resample(resample).ohlc()
-        print(ohlcdf)
-        mpf.plot(ohlcdf,type='candle',style='yahoo')
+        print(ohlcdf)  # shows coingecko data as a nice table
+        
+        #popup chart here, also save
+        mpf.plot(ohlcdf,type='candle',style='yahoo', savefig='chart.png')
+
+
+
+
 
 
 
@@ -139,13 +170,11 @@ def chartCoin(requestedCoin):
         
         
         #plt.show()
-        ##plt.savefig("chart.png")
+        #save chart as file
+        #plt.savefig("chart.png")
 
-        returnMessage = "getchart"
+        return "gotchart"
 
-        #print (returnMessage)
-
-        return returnMessage
 
     except KeyError as e:
         print(e)
