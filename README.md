@@ -1,6 +1,6 @@
 # signal-bot
 
-These Python script use the Signal bot created by AsamK https://github.com/AsamK/signal-cli
+These Python scripts use the Signal bot created by AsamK https://github.com/AsamK/signal-cli
 Please see this account for getting the Signal bot functioning first.  It allows communication between Signal chats and the scripts found here.
 Note that a working Signal account is required, which in turn requires an active phone number.  
 I got around this issue by getting a free phone number from an Android app (Text+ for example).
