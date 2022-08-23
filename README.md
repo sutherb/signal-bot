@@ -1,4 +1,4 @@
-# signal-bot
+# Cryptocurrency Pricebot and Chartbot for Signal
 
 These Python scripts use the Signal bot created by AsamK https://github.com/AsamK/signal-cli
 Please see this account for getting the Signal bot functioning first.  It allows communication between Signal chats and the scripts found here.
