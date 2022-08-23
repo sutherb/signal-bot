@@ -10,7 +10,12 @@ Purpose of my project is to provide cryptocurrency price bot and chart bot funct
 
 
 Once the Signal account is working, it can be added like any other user and messaged directly, or added to chat groups.  
-It will listen for valid commands and respond accordingly.
+
+First run the AsamK script, then run signalswitch.py 
+
+
+To test just the scripts being used without bothering with Signal, use testswitch.py in a terminal and you can just enter commands as if you were in Signal.
+
 
 
 Commands:
@@ -29,4 +34,5 @@ Misc. Commands:
   ETH/BTC Dominance: /ethbtc
   Refresh coin list: /refresh
   Help screen for these commands: /?
+
 
